@@ -1,0 +1,50 @@
+INSTALLATION INSTRUCTIONS
+-------------------------
+
+1. download the file and place it into your wp-content/plugins. directory.
+2. do  "tar zxvf mtg.tar.gz" to unzip the file into your plugins directory.
+3. Install Wordnet.
+4. Install Lingua.
+5. Get the WordPress plugin HeadMeta and install it.
+5. Your webserver must be able to access the Lingua and Wordnet files, so please make sure it does.
+
+That should be it. Enable the plugin, open an old entry and do "Save and continue editing". A new custom field key-value should be generated.
+Check the source code of the related page to make sure you are generating keywords.
+
+HEADMETA HACK
+-------------
+HeadMeta publishes keywords on single-entry pages only. The following hack can be used to place keywords in the content of pages of groups of entries.
+
+Replace the function headmeta() in the source of headmeta.php with this one:
+
+function headmeta() {
+    global $single, $posts, $post_meta_cache;
+
+    foreach($post_meta_cache as $post)
+    {
+        $metavals = $post['head_meta'];
+        $linkvals = $post['head_link'];
+
+        // Generate the tags
+        if (count($metavals)) {
+            foreach ($metavals as $meta) {
+                $tag = "<meta $meta />";
+                print "$tag\n";
+            }
+        }
+
+        if (count($linkvals)) {
+            foreach ($linkvals as $link) {
+                $tag = "<link $link />";
+                print "$tag\n";
+            }
+        }
+    }
+}
+
+CREDITS
+-------
+Many thanks to the following:
+* The people at Wordnet : http://wordnet.princeton.edu/
+* Dan Brian (Lingua) : http://www.brians.org/
+* Dougal Campbell (HeadMeta) : http://dougal.gunters.org/
